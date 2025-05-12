@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excelwise Consultants LTD - Management Consulting</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #374151;
+            background-color: #ffffff;
+            cursor: none;
+        }
+        a {
+            transition: color 0.2s ease-in-out;
+        }
+        .card-hover {
+            transition: transform 0.3s ease-out, box-shadow 0.3s ease-out, border-color 0.3s ease-out;
+            border: 1px solid transparent;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+            border-color: #d8b4fe; /* purple-300 */
+        }
+        #mobile-menu.hidden {
+            display: none;
+        }
+        html { scroll-behavior: smooth; }
+        button:focus, a:focus {
+             outline: 2px solid transparent;
+             outline-offset: 2px;
+             box-shadow: 0 0 0 2px var(--tw-ring-offset-white, white), 0 0 0 4px var(--tw-ring-color, #a78bfa); /* purple-400 */
+        }
+         ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+
+        #cursor-dot, #cursor-circle {
+            position: fixed;
+            border-radius: 50%;
+            z-index: 9999; pointer-events: none; opacity: 0;
+            left: 0; top: 0; transform: translate(-50%, -50%);
+            transition: transform 0.2s ease-out, opacity 0.2s ease-out, background-color 0.3s ease, border-color 0.3s ease;
+       }
+       #cursor-dot {
+            width: 6px; height: 6px; z-index: 9999;
+            background-color: rgba(31, 41, 55, 0.8);
+        }
+       #cursor-circle {
+            width: 24px; height: 24px; z-index: 9998; border-width: 2px;
+            border-color: rgba(31, 41, 55, 0.4);
+        }
+        #cursor-dot.on-dark { background-color: rgba(255, 255, 255, 0.8); }
+        #cursor-circle.on-dark { border-color: rgba(255, 255, 255, 0.4); }
+
+       .cursor-hover #cursor-dot { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+       .cursor-hover #cursor-circle {
+            transform: translate(-50%, -50%) scale(1.6);
+            border-width: 2px;
+            border-color: rgba(147, 51, 234, 0.7); /* purple-600 */
+        }
+        .cursor-hover #cursor-circle.on-dark { border-color: rgba(255, 255, 255, 0.6); }
+
+       a, button, input[type="submit"], .service-card, .location-card, .testimonial-card, .job-card, #job-search-input {
+             cursor: none;
+       }
+        .btn-scale {
+            transition: transform 0.2s ease-out, background-color 0.3s, border-color 0.3s, color 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .btn-scale::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease-out;
+            z-index: -1;
+        }
+        .btn-scale:hover::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+        .btn-scale:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 20px rgba(126, 34, 206, 0.25); /* purple-700 shadow */
+        }
+        .btn-scale .btn-icon {
+             position: relative;
+             display: inline-block;
+             margin-left: 0.25rem;
+             transform: translateX(0);
+             transition: transform 0.3s ease-out;
+        }
+         .btn-scale:hover .btn-icon {
+             transform: translateX(5px);
+         }
+        #hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.4;
+        }
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .animated-gradient {
+            background: linear-gradient(-45deg, #fce7f3, #f3e8ff, #e9d5ff, #d8b4fe, #c084fc);
+            background-size: 400% 400%;
+            animation: gradientAnimation 18s ease infinite;
+        }
+        .shape-divider-container {
+            position: relative;
+            width: 100%;
+            line-height: 0;
+        }
+        .shape-divider {
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+            line-height: 0;
+        }
+        .shape-divider svg {
+            position: relative;
+            display: block;
+            width: calc(100% + 1.3px);
+            height: 60px;
+        }
+        .shape-fill {
+            fill: #ffffff;
+        }
+        .bg-purple-50 .shape-fill { fill: #faf5ff; }
+        .bg-white .shape-fill { fill: #ffffff; }
+        .bg-gray-800 .shape-fill { fill: #1f2937; }
+
+        .scroll-ribbon {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            width: 0;
+            background: linear-gradient(to right, #ec4899, #a855f7); /* Pink to Purple */
+            transition: width 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+            z-index: 10;
+            transform-origin: left center;
+        }
+        .scroll-ribbon.animate-rtl {
+            left: auto;
+            right: 0;
+            transform-origin: right center;
+        }
+        .scroll-ribbon.visible {
+            width: 100%;
+        }
+        .partner-logo {
+            filter: grayscale(100%);
+            transition: filter 0.3s ease-out, transform 0.3s ease-out;
+            opacity: 0.7;
+        }
+        .partner-logo:hover {
+            filter: grayscale(0%);
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        .animated-title span, .animated-subtitle span {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+         .job-category-tag {
+            background-color: #ede9fe; /* purple-100 */
+            color: #5b21b6; /* purple-700 */
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px; /* pill shape */
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .job-category-tag:hover {
+            background-color: #a78bfa; /* purple-400 */
+            color: white;
+        }
+
+    </style>
+</head>
+<body class="bg-white">
+
+    <div id="cursor-dot"></div>
+    <div id="cursor-circle"></div>
+
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-4 lg:px-6 py-3 flex justify-between items-center">
+            <a href="https://excelwiseconsultants.co.ke/" target="_blank" rel="noopener noreferrer">
+                <img src="https://excelwiseconsultants.co.ke/wp-content/uploads/2021/03/excelwise-logo.png" class="h-10 w-auto" alt="Excelwise Consultants LTD Logo" onerror="this.outerHTML='<span class=\'text-xl font-semibold text-gray-900\'>Excelwise Consultants LTD</span>'">
+            </a>
+            <div class="hidden lg:flex items-center space-x-6">
+                <a href="#" class="text-gray-700 hover:text-purple-600 font-medium">Home</a>
+                <a href="#about" class="text-gray-700 hover:text-purple-600 font-medium">About Us</a>
+                <a href="#services" class="text-gray-700 hover:text-purple-600 font-medium">Our Services</a>
+                <a href="#jobs" class="text-gray-700 hover:text-purple-600 font-medium">Find Jobs</a>
+                <a href="#contact-form" class="text-gray-700 hover:text-purple-600 font-medium">Contact Us</a>
+                 <a href="#" class="text-gray-700 hover:text-purple-600 font-medium text-sm">Log In</a>
+                 <a href="#" class="text-gray-700 hover:text-purple-600 font-medium text-sm mr-3">Sign Up</a>
+                <a href="#contact-form" class="bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-5 rounded-md transition duration-300 btn-scale">
+                    Get Free Consultation
+                     <span class="btn-icon inline-block">&rarr;</span>
+                </a>
+            </div>
+            <button id="mobile-menu-button" class="lg:hidden text-gray-700 hover:text-purple-600 focus:outline-none">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-gray-200">
+            <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 hover:text-purple-600">Home</a>
+            <a href="#about" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 hover:text-purple-600">About Us</a>
+            <a href="#services" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 hover:text-purple-600">Our Services</a>
+            <a href="#jobs" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 hover:text-purple-600">Find Jobs</a>
+            <a href="#contact-form" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 hover:text-purple-600">Contact Us</a>
+             <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 hover:text-purple-600">Log In</a>
+             <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 hover:text-purple-600">Sign Up</a>
+            <div class="p-4">
+                <a href="#contact-form" class="block text-center w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-5 rounded-md transition duration-300 btn-scale">
+                    Get Free Consultation
+                    <span class="btn-icon inline-block ml-1">&rarr;</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero" class="relative animated-gradient text-gray-900 py-32 md:py-48 overflow-hidden">
+            <canvas id="hero-canvas"></canvas>
+            <div class="container mx-auto px-4 lg:px-6 text-center relative z-10">
+                <h1 class="animated-title text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight text-gray-900">
+                    Your Management Consultancy of Choice
+                </h1>
+                <p class="animated-subtitle text-lg md:text-xl text-gray-700 mb-8 max-w-3xl mx-auto">
+                    Tailored management solutions driving sustainable growth and operational excellence.
+                </p>
+                <div class="flex justify-center items-center space-x-4">
+                    <a href="#jobs" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-8 rounded-md transition duration-300 text-lg btn-scale">
+                        Find Jobs
+                        <span class="btn-icon inline-block">&rarr;</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <div class="shape-divider-container">
+            <div class="shape-divider bg-white">
+                <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+                </svg>
+            </div>
+            <div id="ribbon-about" class="scroll-ribbon"></div>
+        </div>
+
+        <section id="about" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-4 lg:px-6">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="text-left">
+                        <span class="text-purple-600 font-semibold uppercase tracking-wider text-sm">Who We Are</span>
+                        <h2 class="animated-title text-3xl md:text-4xl font-bold text-gray-900 mt-2 mb-5">Welcome to Excelwise Consultants</h2>
+                        <p class="text-gray-600 mb-4 leading-relaxed">
+                            Excelwise Consultants Limited is a Management Consulting company that offers an array of services tailored to accurately address organizations’ management needs.
+                        </p>
+                        <p class="text-gray-600 mb-4 leading-relaxed">
+                           Our expertise includes: Professional Recruitment and placement solutions, Team Building & Experiential Learning solutions, HR Manual development, Training & Development, Strategic Leadership & Management Development, Performance Management, Talent Management, Job Evaluation, Background Screening, Job Structure & Organization Design, Compensation and benefits, Organization Change management, Health & Safety Management.
+                        </p>
+                        <p class="text-gray-600 mb-6 leading-relaxed">
+                            Our core values drive our approach: Integrity, Professionalism, Client Focus, and Innovation.
+                        </p>
+                        <a href="#contact-form" class="text-purple-600 font-medium hover:underline">Learn More <span aria-hidden="true">&rarr;</span></a>
+                    </div>
+                    <div class="mt-8 md:mt-0">
+                        <img src="https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Team meeting" class="rounded-lg shadow-xl w-full h-auto object-cover">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="shape-divider-container">
+            <div class="shape-divider bg-purple-50">
+                <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+                </svg>
+            </div>
+             <div id="ribbon-services" class="scroll-ribbon animate-rtl"></div>
+        </div>
+
+        <section id="services" class="py-16 md:py-24 bg-purple-50">
+            <div class="container mx-auto px-4 lg:px-6">
+                <div class="text-center mb-12">
+                    <span class="text-purple-600 font-semibold uppercase tracking-wider text-sm">What We Do</span>
+                    <h2 class="animated-title text-3xl md:text-4xl font-bold text-gray-900 mt-2 mb-3">Our Core Services</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">
+                        We offer a range of specialized services designed to meet your management needs.
+                    </p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="service-card card-hover bg-white p-6 rounded-lg shadow-md text-center border border-gray-200">
+                        <div class="mb-4 text-purple-600">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Payroll Processing</h3>
+                        <p class="text-sm text-gray-600">Efficient and accurate management of your company payroll.</p>
+                    </div>
+                    <div class="service-card card-hover bg-white p-6 rounded-lg shadow-md text-center border border-gray-200">
+                        <div class="mb-4 text-purple-600">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">HR Outsourcing</h3>
+                        <p class="text-sm text-gray-600">Comprehensive HR support, allowing you to focus on your core business.</p>
+                    </div>
+                    <div class="service-card card-hover bg-white p-6 rounded-lg shadow-md text-center border border-gray-200">
+                        <div class="mb-4 text-purple-600">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17.25v-.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v.375m-3.75 0h.008v.015h-.008V17.25zm3.75 0h.008v.015h-.008V17.25zm-3.75 0h.008v.015h-.008V17.25zm3.75 0h.008v.015h-.008V17.25zm-3.75 0h.008v.015h-.008V17.25zm3.75 0h.008v.015h-.008V17.25zM9.75 19.125v-.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v.375m-3.75 0h.008v.015h-.008V19.125zm3.75 0h.008v.015h-.008V19.125zm-3.75 0h.008v.015h-.008V19.125zm3.75 0h.008v.015h-.008V19.125zm-3.75 0h.008v.015h-.008V19.125zm3.75 0h.008v.015h-.008V19.125zM9.75 21v-.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v.375m-3.75 0h.008v.015h-.008V21zm3.75 0h.008v.015h-.008V21zm-3.75 0h.008v.015h-.008V21zm3.75 0h.008v.015h-.008V21zm-3.75 0h.008v.015h-.008V21zm3.75 0h.008v.015h-.008V21zM9.75 3v1.5m0 0V3m0 1.5a3 3 0 100 6 3 3 0 000-6zm0 0V3m6 1.5V3m0 1.5a3 3 0 100 6 3 3 0 000-6zm0 0V3" /></svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Project Consulting</h3>
+                        <p class="text-sm text-gray-600">Strategic guidance and management for your key projects.</p>
+                    </div>
+                    <div class="service-card card-hover bg-white p-6 rounded-lg shadow-md text-center border border-gray-200">
+                        <div class="mb-4 text-purple-600">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" /></svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Recruitment</h3>
+                        <p class="text-sm text-gray-600">Finding and attracting the best talent for your organization.</p>
+                    </div>
+                </div>
+                <div class="text-center mt-12">
+                     <a href="#" class="border border-purple-600 text-purple-600 hover:bg-purple-100 font-medium py-2 px-6 rounded-md transition duration-300">
+                         View All Services
+                     </a>
+                </div>
+            </div>
+        </section>
+
+         <section id="why-choose-us" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-4 lg:px-6">
+                <div class="text-center mb-12">
+                    <h2 class="animated-title text-3xl md:text-4xl font-bold text-gray-900 mb-3">Why Choose Excelwise?</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">
+                        We deliver exceptional value through our expertise and client-centric approach.
+                    </p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div>
+                        <div class="mb-4 inline-flex items-center justify-center h-12 w-12 rounded-full bg-purple-100 text-purple-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Expert Team</h3>
+                        <p class="text-sm text-gray-600">Highly qualified consultants with deep industry knowledge.</p>
+                    </div>
+                     <div>
+                        <div class="mb-4 inline-flex items-center justify-center h-12 w-12 rounded-full bg-purple-100 text-purple-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Tailored Solutions</h3>
+                        <p class="text-sm text-gray-600">Customized strategies that align with your specific business goals.</p>
+                    </div>
+                     <div>
+                        <div class="mb-4 inline-flex items-center justify-center h-12 w-12 rounded-full bg-purple-100 text-purple-600">
+                           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Proven Results</h3>
+                        <p class="text-sm text-gray-600">A track record of helping businesses achieve management excellence.</p>
+                    </div>
+                </div>
+                 <div class="text-center mt-16">
+                      <a href="#contact-form" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-8 rounded-md transition duration-300 text-lg btn-scale">
+                         Partner with Us Today
+                         <span class="btn-icon inline-block">&rarr;</span>
+                     </a>
+                 </div>
+            </div>
+        </section>
+
+        <section class="py-20 md:py-28 bg-gray-800 relative">
+             <div class="container mx-auto px-4 lg:px-6 text-center relative z-10">
+                 <h2 class="animated-title text-3xl md:text-4xl font-bold text-white mb-6">Ready to Optimize Your Management Strategy?</h2>
+                 <p class="text-gray-200 mb-8 max-w-xl mx-auto">Let's discuss how Excelwise Consultants can partner with you for success.</p>
+                 <a href="#contact-form" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-8 rounded-md transition duration-300 text-lg btn-scale">
+                    Request a Consultation
+                    <span class="btn-icon inline-block">&rarr;</span>
+                </a>
+             </div>
+        </section>
+
+        <div class="shape-divider-container">
+            <div class="shape-divider bg-purple-50">
+                 <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+                </svg>
+            </div>
+             <div id="ribbon-testimonials" class="scroll-ribbon"></div>
+        </div>
+
+        <section id="testimonials" class="py-16 md:py-24 bg-purple-50">
+            <div class="container mx-auto px-4 lg:px-6">
+                <div class="text-center mb-12">
+                    <h2 class="animated-title text-3xl md:text-4xl font-bold text-gray-900 mb-3">Client Success Stories</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">Hear what our partners say about working with us.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="testimonial-card card-hover bg-white p-8 rounded-lg shadow-md border border-gray-200">
+                        <p class="text-gray-600 italic mb-6">"Excelwise Consultants provided invaluable support during our recent expansion. Their recruitment strategy helped us build a fantastic team quickly and efficiently."</p>
+                        <div class="flex items-center">
+                            <img src="https://placehold.co/50x50/e2e8f0/334155?text=AA" alt="Client Avatar" class="w-12 h-12 rounded-full mr-4 border-2 border-gray-200">
+                            <div>
+                                <p class="font-semibold text-gray-900">Alice Mwangi</p>
+                                <p class="text-sm text-gray-500">CEO, TechStart Kenya</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card card-hover bg-white p-8 rounded-lg shadow-md border border-gray-200">
+                        <p class="text-gray-600 italic mb-6">"The HR manual developed by Excelwise has been instrumental in standardizing our processes. Their professionalism and attention to detail were outstanding."</p>
+                        <div class="flex items-center">
+                            <img src="https://placehold.co/50x50/e2e8f0/334155?text=BO" alt="Client Avatar" class="w-12 h-12 rounded-full mr-4 border-2 border-gray-200">
+                            <div>
+                                <p class="font-semibold text-gray-900">Brian Omondi</p>
+                                <p class="text-sm text-gray-500">Operations Manager, Creative Solutions</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="shape-divider-container">
+            <div class="shape-divider bg-white" style="transform: rotate(180deg);">
+                <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+                </svg>
+            </div>
+             <div id="ribbon-jobs" class="scroll-ribbon animate-rtl"></div>
+        </div>
+
+         <section id="jobs" class="py-16 md:py-24 bg-white">
+             <div class="container mx-auto px-4 lg:px-6">
+                 <div class="text-center mb-12">
+                    <h2 class="animated-title text-3xl md:text-4xl font-bold text-gray-900 mb-3">Find Jobs</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">Find your next career move with Excelwise Consultants or our partners.</p>
+                 </div>
+
+                 <div class="max-w-2xl mx-auto mb-12">
+                    <div class="relative">
+                        <input type="search" id="job-search-input" placeholder="Search by keyword, title, location..." class="w-full px-4 py-3 pl-10 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                        </div>
+                    </div>
+                 </div>
+
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                     <div class="job-card card-hover bg-gray-50 p-6 rounded-lg border border-gray-200 flex items-start space-x-4">
+                         <div class="flex-shrink-0 text-purple-600 mt-1">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                         </div>
+                         <div>
+                             <h3 class="text-lg font-semibold text-gray-900 mb-1">Management Consultant</h3>
+                             <p class="text-sm text-gray-500 mb-1">Nairobi, Kenya</p>
+                             <p class="text-sm text-gray-600 mb-3">Seeking experienced consultant to drive client strategy...</p>
+                             <a href="#" class="text-purple-600 font-medium hover:underline text-sm">View Details &rarr;</a>
+                         </div>
+                     </div>
+                     <div class="job-card card-hover bg-gray-50 p-6 rounded-lg border border-gray-200 flex items-start space-x-4">
+                          <div class="flex-shrink-0 text-purple-600 mt-1">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                         </div>
+                         <div>
+                             <h3 class="text-lg font-semibold text-gray-900 mb-1">Training Coordinator</h3>
+                             <p class="text-sm text-gray-500 mb-1">Remote</p>
+                             <p class="text-sm text-gray-600 mb-3">Organize and coordinate corporate training programs...</p>
+                             <a href="#" class="text-purple-600 font-medium hover:underline text-sm">View Details &rarr;</a>
+                         </div>
+                     </div>
+                 </div>
+
+                 <div class="text-center mt-12">
+                     <a href="#" class="bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-6 rounded-md transition duration-300 btn-scale">
+                         View All Openings
+                         <span class="btn-icon inline-block ml-1">&rarr;</span>
+                     </a>
+                 </div>
+             </div>
+         </section>
+
+        <section id="blog" class="py-16 md:py-24 bg-white">
+             <div class="container mx-auto px-4 lg:px-6">
+                 <div class="text-center mb-12">
+                    <h2 class="animated-title text-3xl md:text-4xl font-bold text-gray-900 mb-3">News & Blogs</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">Stay updated with the latest insights and trends in Management.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="blog-card card-hover bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
+                        <img src="https://images.pexels.com/photos/5668858/pexels-photo-5668858.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Interview preparation" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">How to Prepare for an Interview</h3>
+                            <p class="text-sm text-gray-600 mb-4">Key steps to ace your next job interview and make a lasting impression...</p>
+                            <a href="#" class="text-purple-600 font-medium hover:underline text-sm">Read More <span aria-hidden="true">&rarr;</span></a>
+                        </div>
+                    </div>
+                     <div class="blog-card card-hover bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
+                        <img src="https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Team building" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">The Importance of Team Building</h3>
+                            <p class="text-sm text-gray-600 mb-4">Discover why investing in team building activities can boost morale and productivity...</p>
+                            <a href="#" class="text-purple-600 font-medium hover:underline text-sm">Read More <span aria-hidden="true">&rarr;</span></a>
+                        </div>
+                    </div>
+                     <div class="blog-card card-hover bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
+                        <img src="https://images.pexels.com/photos/6801648/pexels-photo-6801648.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Payroll" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Simplifying Payroll Management</h3>
+                            <p class="text-sm text-gray-600 mb-4">Tips and tools to streamline your payroll processes and ensure compliance...</p>
+                            <a href="#" class="text-purple-600 font-medium hover:underline text-sm">Read More <span aria-hidden="true">&rarr;</span></a>
+                        </div>
+                    </div>
+                </div>
+             </div>
+        </section>
+
+        <section class="py-16 bg-purple-50">
+            <div class="container mx-auto px-4 lg:px-6">
+                <h2 class="animated-title text-center text-2xl font-semibold text-gray-700 mb-8">Our Partners</h2>
+                <div class="flex flex-wrap justify-center items-center gap-8 md:gap-12">
+                    <img src="https://excelwiseconsultants.co.ke/wp-content/uploads/2021/03/first.jpg" alt="Partner Logo 1" class="h-10 w-auto partner-logo" onerror="this.style.display='none'">
+                    <img src="https://excelwiseconsultants.co.ke/wp-content/uploads/2021/03/tharaka.jpg" alt="Partner Logo 2" class="h-10 w-auto partner-logo" onerror="this.style.display='none'">
+                    <img src="https://excelwiseconsultants.co.ke/wp-content/uploads/2021/03/enchant.jpg" alt="Partner Logo 3" class="h-10 w-auto partner-logo" onerror="this.style.display='none'">
+                    <img src="https://excelwiseconsultants.co.ke/wp-content/uploads/2021/03/ruaraka.jpg" alt="Partner Logo 4" class="h-10 w-auto partner-logo" onerror="this.style.display='none'">
+                    <img src="https://excelwiseconsultants.co.ke/wp-content/uploads/2021/03/domaine.jpg" alt="Partner Logo 5" class="h-10 w-auto partner-logo" onerror="this.style.display='none'">
+                    <img src="https://excelwiseconsultants.co.ke/wp-content/uploads/2021/03/cyber.jpg" alt="Partner Logo 6" class="h-10 w-auto partner-logo" onerror="this.style.display='none'">
+                </div>
+            </div>
+        </section>
+
+         <section id="contact-form" class="py-16 md:py-20 bg-purple-700 text-white">
+            <div class="container mx-auto px-4 lg:px-6 text-center">
+                 <h2 class="animated-title text-3xl font-bold mb-4">Stay Informed</h2>
+                 <p class="mb-8 max-w-xl mx-auto">Subscribe to our mailing list for the latest insights and company news.</p>
+                 <form class="flex flex-col sm:flex-row justify-center items-center gap-4 max-w-md mx-auto">
+                     <label for="email-subscribe" class="sr-only">Email address</label>
+                     <input type="email" id="email-subscribe" placeholder="Enter your email" required class="w-full sm:w-auto flex-grow px-4 py-2 rounded-md text-gray-900 bg-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-300 placeholder-gray-500">
+                     <button type="submit" class="bg-white hover:bg-gray-100 text-purple-700 font-semibold py-2 px-6 rounded-md transition duration-300 w-full sm:w-auto btn-scale">
+                         Subscribe
+                     </button>
+                 </form>
+            </div>
+        </section>
+
+    </main>
+
+    <footer id="main-footer" class="bg-gray-800 text-gray-400 py-12">
+        <div class="container mx-auto px-4 lg:px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                <div>
+                     <p class="text-sm text-gray-400 leading-relaxed mt-4">Providing professional management consulting services.</p>
+                </div>
+                 <div>
+                    <h4 class="text-lg font-semibold text-gray-200 mb-3">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#about" class="hover:text-white transition duration-300 text-sm">About Us</a></li>
+                        <li><a href="#services" class="hover:text-white transition duration-300 text-sm">Services</a></li>
+                        <li><a href="#blog" class="hover:text-white transition duration-300 text-sm">Blog</a></li>
+                        <li><a href="#contact-form" class="hover:text-white transition duration-300 text-sm">Contact</a></li>
+                    </ul>
+                </div>
+                 <div>
+                    <h4 class="text-lg font-semibold text-gray-200 mb-3">Services</h4>
+                    <ul class="space-y-2">
+                       <li><a href="#services" class="hover:text-white transition duration-300 text-sm">Payroll Processing</a></li>
+                       <li><a href="#services" class="hover:text-white transition duration-300 text-sm">HR Outsourcing</a></li>
+                       <li><a href="#services" class="hover:text-white transition duration-300 text-sm">Project Consulting</a></li>
+                       <li><a href="#services" class="hover:text-white transition duration-300 text-sm">Recruitment</a></li>
+                    </ul>
+                </div>
+                 <div>
+                    <h4 class="text-lg font-semibold text-gray-200 mb-3">Contact Info</h4>
+                    <p class="text-sm text-gray-400 mb-2">Nairobi, Kenya</p>
+                    <p class="text-sm text-gray-400 mb-2">Phone: <a href="tel:+254715788450" class="hover:text-white">+254 715 788 450</a></p>
+                    <p class="text-sm text-gray-400">Email: <a href="mailto:info@excelwiseconsultants.co.ke" class="hover:text-white">info@excelwiseconsultants.co.ke</a></p>
+                    <p class="text-sm text-gray-400 mt-2">Mon - Fri: 8am - 5pm</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-8 text-center text-sm text-gray-500">
+                &copy; <span id="current-year"></span> Excelwise Consultants LTD. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const menuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (menuButton && mobileMenu) {
+            menuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            const mobileLinks = mobileMenu.querySelectorAll('a');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                     setTimeout(() => mobileMenu.classList.add('hidden'), 150);
+                });
+            });
+        }
+
+        const currentYearEl = document.getElementById('current-year');
+        if (currentYearEl) {
+            currentYearEl.textContent = new Date().getFullYear();
+        }
+
+         document.addEventListener('DOMContentLoaded', function() {
+            const cursorDot = document.getElementById('cursor-dot');
+            const cursorCircle = document.getElementById('cursor-circle');
+            const footer = document.getElementById('main-footer');
+            if (!cursorDot || !cursorCircle) { return; }
+
+            let targetX = -100, targetY = -100;
+            let dotX = -100, dotY = -100;
+            let circleX = -100, circleY = -100;
+            const lerpFactor = 0.15;
+            let cursorVisible = false;
+
+            function updateCursor() {
+                dotX = targetX; dotY = targetY;
+                circleX += (targetX - circleX) * lerpFactor;
+                circleY += (targetY - circleY) * lerpFactor;
+
+                if (cursorVisible) {
+                    const dotScale = cursorDot.classList.contains('cursor-hover') ? 0 : 1;
+                    const circleScale = cursorCircle.classList.contains('cursor-hover') ? 1.6 : 1;
+                    cursorDot.style.transform = `translate(${dotX}px, ${dotY}px) translate(-50%, -50%) scale(${dotScale})`;
+                    cursorCircle.style.transform = `translate(${circleX}px, ${circleY}px) translate(-50%, -50%) scale(${circleScale})`;
+                }
+                requestAnimationFrame(updateCursor);
+            }
+
+            document.addEventListener('mousemove', (e) => {
+                targetX = e.clientX; targetY = e.clientY;
+                if (!cursorVisible) {
+                     dotX = targetX; dotY = targetY; circleX = targetX; circleY = targetY;
+                     cursorDot.style.transform = `translate(${dotX}px, ${dotY}px) translate(-50%, -50%) scale(1)`;
+                     cursorCircle.style.transform = `translate(${circleX}px, ${circleY}px) translate(-50%, -50%) scale(1)`;
+                     cursorDot.style.opacity = '1'; cursorCircle.style.opacity = '1';
+                     cursorVisible = true;
+                 }
+            });
+
+            const interactiveElements = document.querySelectorAll('a, button, input[type="submit"], .service-card, .location-card, .testimonial-card, .job-card, #job-search-input');
+            interactiveElements.forEach(el => {
+                el.addEventListener('mouseenter', () => { cursorDot.classList.add('cursor-hover'); cursorCircle.classList.add('cursor-hover'); });
+                el.addEventListener('mouseleave', () => { cursorDot.classList.remove('cursor-hover'); cursorCircle.classList.remove('cursor-hover'); });
+            });
+
+             if (footer) {
+                 footer.addEventListener('mouseenter', () => {
+                     cursorDot.classList.add('on-dark');
+                     cursorCircle.classList.add('on-dark');
+                 });
+                 footer.addEventListener('mouseleave', () => {
+                      cursorDot.classList.remove('on-dark');
+                      cursorCircle.classList.remove('on-dark');
+                 });
+             }
+
+            document.addEventListener('mouseleave', () => { cursorDot.style.opacity = '0'; cursorCircle.style.opacity = '0'; cursorVisible = false; });
+            document.addEventListener('mouseenter', (e) => {
+                targetX = e.clientX; targetY = e.clientY;
+                dotX = targetX; dotY = targetY; circleX = targetX; circleY = targetY;
+                cursorDot.style.opacity = '1'; cursorCircle.style.opacity = '1';
+                cursorVisible = true;
+            });
+
+            requestAnimationFrame(updateCursor);
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('hero-canvas');
+            if (!canvas || typeof THREE === 'undefined') return;
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+
+            renderer.setSize(window.innerWidth, canvas.parentElement.offsetHeight);
+            camera.position.z = 5;
+
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCount = 5000;
+            const posArray = new Float32Array(particlesCount * 3);
+
+            for (let i = 0; i < particlesCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 15;
+            }
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+            const particlesMaterial = new THREE.PointsMaterial({
+                size: 0.01,
+                color: 0xc084fc,
+                transparent: true,
+                opacity: 0.6,
+                blending: THREE.AdditiveBlending
+            });
+            const particleMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particleMesh);
+
+            const geometry = new THREE.TorusKnotGeometry( 1, 0.3, 100, 16 );
+            const material = new THREE.MeshNormalMaterial({ flatShading: true });
+            const shape = new THREE.Mesh(geometry, material);
+            shape.scale.set(0.8, 0.8, 0.8);
+            scene.add(shape);
+
+            let mouseX = 0, mouseY = 0;
+            document.addEventListener('mousemove', (event) => {
+                mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+                mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+            });
+
+
+            function animate() {
+                requestAnimationFrame(animate);
+
+                shape.rotation.x += 0.002;
+                shape.rotation.y += 0.002;
+                particleMesh.rotation.y += 0.0005;
+
+                 shape.rotation.x += (mouseY * 0.1 - shape.rotation.x) * 0.02;
+                 shape.rotation.y += (mouseX * 0.1 - shape.rotation.y) * 0.02;
+
+
+                renderer.render(scene, camera);
+            }
+
+             function onWindowResize() {
+                const heroSection = document.getElementById('hero');
+                if (heroSection) {
+                    const width = heroSection.offsetWidth;
+                    const height = heroSection.offsetHeight;
+                    if (width > 0 && height > 0) {
+                        camera.aspect = width / height;
+                        camera.updateProjectionMatrix();
+                        renderer.setSize(width, height);
+                    }
+                }
+            }
+            window.addEventListener('resize', onWindowResize, false);
+
+            setTimeout(onWindowResize, 100);
+            animate();
+        });
+
+         document.addEventListener('DOMContentLoaded', () => {
+            const animatedTitles = document.querySelectorAll('.animated-title, .animated-subtitle');
+
+            const wrapLetters = (element) => {
+                if (element.querySelector('.letter')) return element.querySelectorAll('.letter');
+                element.innerHTML = element.textContent.replace(/\S/g, "<span class='letter'>$&</span>");
+                return element.querySelectorAll('.letter');
+            };
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observerCallback = (entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const letters = wrapLetters(entry.target);
+                        letters.forEach((letter, index) => {
+                            setTimeout(() => {
+                                letter.style.opacity = '1';
+                                letter.style.transform = 'translateY(0)';
+                            }, index * 30);
+                        });
+                        observer.unobserve(entry.target);
+                    }
+                });
+            };
+
+            const textObserver = new IntersectionObserver(observerCallback, observerOptions);
+            animatedTitles.forEach(title => {
+                textObserver.observe(title);
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('main section[id]');
+            const ribbons = document.querySelectorAll('.scroll-ribbon');
+
+            if (!sections.length || !ribbons.length) return;
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '-40% 0px -60% 0px',
+                threshold: 0
+            };
+
+            let ribbonIndex = 0;
+
+            const observerCallback = (entries) => {
+                entries.forEach(entry => {
+                    const sectionId = entry.target.id;
+                    const ribbonId = `ribbon-${sectionId}`;
+                    const ribbonElement = document.getElementById(ribbonId);
+
+                    let sectionIndex = -1;
+                    sections.forEach((sec, idx) => { if (sec.id === sectionId) sectionIndex = idx; });
+
+                    const targetRibbonIndex = sectionIndex - 1;
+
+                    if (entry.isIntersecting) {
+                        if (targetRibbonIndex >= 0 && targetRibbonIndex < ribbons.length) {
+                            const ribbonToAnimate = ribbons[targetRibbonIndex];
+                            ribbonToAnimate.classList.remove('animate-rtl');
+                            if (targetRibbonIndex % 2 !== 0) {
+                                 ribbonToAnimate.classList.add('animate-rtl');
+                            }
+                            ribbonToAnimate.classList.add('visible');
+                        }
+                         for (let i = 0; i < targetRibbonIndex; i++) {
+                             if (ribbons[i]) ribbons[i].classList.add('visible');
+                         }
+                        for (let i = targetRibbonIndex + 1; i < ribbons.length; i++) {
+                             if (ribbons[i]) ribbons[i].classList.remove('visible');
+                         }
+
+                    } else {
+                        if (entry.boundingClientRect.top >= window.innerHeight * 0.6) {
+                             if (targetRibbonIndex >= 0 && targetRibbonIndex < ribbons.length) {
+                                 ribbons[targetRibbonIndex].classList.remove('visible');
+                             }
+                        }
+                        if (window.scrollY === 0) {
+                            ribbons.forEach(r => r.classList.remove('visible'));
+                        }
+                    }
+                });
+            };
+
+            const sectionObserver = new IntersectionObserver(observerCallback, observerOptions);
+            sections.forEach(section => sectionObserver.observe(section));
+        });
+
+    </script>
+
+</body>
+</html>
+```
