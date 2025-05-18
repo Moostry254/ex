@@ -3,17 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Excelwise Consultants LTD - Management Consulting</title>
+    <title>Excelwise Consultants LTD - Management Consulting Enhanced</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
             color: #374151;
             background-color: #ffffff;
             cursor: none;
+            overflow-x: hidden;
         }
         a {
             transition: color 0.2s ease-in-out;
@@ -76,7 +78,7 @@
         }
         .cursor-hover #cursor-circle.on-dark { border-color: rgba(255, 255, 255, 0.6); }
 
-       a, button, input[type="submit"], .service-card, .location-card, .testimonial-card, .job-card, #job-search-input {
+       a, button, input[type="submit"], .service-card, .location-card, .testimonial-card, .job-card, #job-search-input, #chat-bubble, #close-chat-button, .chat-option-button {
              cursor: none;
        }
         .btn-scale {
@@ -104,7 +106,7 @@
         }
         .btn-scale:hover {
             transform: scale(1.03);
-            box-shadow: 0 6px 20px rgba(126, 34, 206, 0.25); /* purple-700 shadow */
+            box-shadow: 0 6px 20px rgba(126, 34, 206, 0.25);
         }
         .btn-scale .btn-icon {
              position: relative;
@@ -116,15 +118,7 @@
          .btn-scale:hover .btn-icon {
              transform: translateX(5px);
          }
-        #hero-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            opacity: 0.4;
-        }
+
         @keyframes gradientAnimation {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -135,6 +129,7 @@
             background-size: 400% 400%;
             animation: gradientAnimation 18s ease infinite;
         }
+
         .shape-divider-container {
             position: relative;
             width: 100%;
@@ -178,6 +173,8 @@
         .scroll-ribbon.visible {
             width: 100%;
         }
+
+
         .partner-logo {
             filter: grayscale(100%);
             transition: filter 0.3s ease-out, transform 0.3s ease-out;
@@ -188,24 +185,165 @@
             opacity: 1;
             transform: scale(1.1);
         }
+
         .animated-title span, .animated-subtitle span {
             display: inline-block;
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 0.5s ease, transform 0.5s ease;
         }
-         .job-category-tag {
-            background-color: #ede9fe; /* purple-100 */
-            color: #5b21b6; /* purple-700 */
+
+        #hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.4;
+        }
+        .job-category-tag {
+            background-color: #ede9fe;
+            color: #5b21b6;
             padding: 0.25rem 0.75rem;
-            border-radius: 9999px; /* pill shape */
+            border-radius: 9999px;
             font-size: 0.875rem;
             font-weight: 500;
             transition: background-color 0.2s, color 0.2s;
         }
         .job-category-tag:hover {
-            background-color: #a78bfa; /* purple-400 */
+            background-color: #a78bfa;
             color: white;
+        }
+
+        #chat-bubble {
+            position: fixed;
+            bottom: 1.25rem;
+            right: 1.25rem;
+            z-index: 100;
+            background-color: #7c3aed;
+            color: white;
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.08);
+            transition: transform 0.2s ease-out, background-color 0.2s;
+        }
+        #chat-bubble:hover {
+            background-color: #6d28d9;
+            transform: scale(1.1);
+        }
+        #chat-window {
+            position: fixed;
+            bottom: 5.5rem;
+            right: 1.25rem;
+            width: 350px;
+            max-width: 90vw;
+            height: 450px;
+            max-height: 70vh;
+            background-color: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+            z-index: 99;
+            pointer-events: none;
+        }
+        #chat-window.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+        #chat-header {
+            background-color: #8b5cf6;
+            color: white;
+            padding: 0.75rem 1rem;
+            border-top-left-radius: 0.75rem;
+            border-top-right-radius: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        #chat-header h3 { font-weight: 600; font-size: 1rem; }
+        #close-chat-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+        #chat-messages {
+            flex-grow: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .chat-message {
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            max-width: 80%;
+            word-wrap: break-word;
+            font-size: 0.875rem;
+        }
+        .chat-message.bot {
+            background-color: #ede9fe;
+            color: #5b21b6;
+            align-self: flex-start;
+            border-bottom-left-radius: 0;
+        }
+        .chat-message.user {
+            background-color: #a78bfa;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 0;
+        }
+        #chat-options {
+            padding: 0.75rem;
+            border-top: 1px solid #e5e7eb;
+            background-color: #f9fafb;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .chat-option-button {
+            background-color: #8b5cf6;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            border: none;
+            transition: background-color 0.2s;
+        }
+        .chat-option-button:hover {
+            background-color: #7c3aed;
+        }
+        .typing-indicator {
+            font-style: italic;
+            color: #6b7280;
+            font-size: 0.75rem;
+            padding: 0.5rem 0;
+        }
+        .social-icon-link svg {
+            width: 1.25rem;
+            height: 1.25rem;
+            fill: currentColor;
+            transition: color 0.2s ease-in-out;
+        }
+        .social-icon-link:hover {
+            color: #c4b5fd;
         }
 
     </style>
@@ -402,10 +540,10 @@
             </div>
         </section>
 
-        <section class="py-20 md:py-28 bg-gray-800 relative">
+        <section id="cta-dark-section" class="py-20 md:py-28 bg-gray-800 relative">
              <div class="container mx-auto px-4 lg:px-6 text-center relative z-10">
                  <h2 class="animated-title text-3xl md:text-4xl font-bold text-white mb-6">Ready to Optimize Your Management Strategy?</h2>
-                 <p class="text-gray-200 mb-8 max-w-xl mx-auto">Let's discuss how Excelwise Consultants can partner with you for success.</p>
+                 <p class="animated-subtitle text-gray-200 mb-8 max-w-xl mx-auto">Let's discuss how Excelwise Consultants can partner with you for success.</p>
                  <a href="#contact-form" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-8 rounded-md transition duration-300 text-lg btn-scale">
                     Request a Consultation
                     <span class="btn-icon inline-block">&rarr;</span>
@@ -607,6 +745,20 @@
                     <p class="text-sm text-gray-400 mb-2">Phone: <a href="tel:+254715788450" class="hover:text-white">+254 715 788 450</a></p>
                     <p class="text-sm text-gray-400">Email: <a href="mailto:info@excelwiseconsultants.co.ke" class="hover:text-white">info@excelwiseconsultants.co.ke</a></p>
                     <p class="text-sm text-gray-400 mt-2">Mon - Fri: 8am - 5pm</p>
+                     <div class="mt-4 flex space-x-3">
+                        <a href="https://www.facebook.com/excelwiseconsultants/" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-purple-400 social-icon-link">
+                            <span class="sr-only">Facebook</span>
+                            <svg viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/></svg>
+                        </a>
+                        <a href="https://twitter.com/excel_wise" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-purple-400 social-icon-link">
+                            <span class="sr-only">X (Twitter)</span>
+                            <svg viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        </a>
+                        <a href="https://www.linkedin.com/in/excel-wiseconsultant-389b14206/" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-purple-400 social-icon-link">
+                            <span class="sr-only">LinkedIn</span>
+                            <svg viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                        </a>
+                    </div>
                 </div>
             </div>
             <div class="border-t border-gray-700 pt-8 text-center text-sm text-gray-500">
@@ -614,6 +766,22 @@
             </div>
         </div>
     </footer>
+
+    <div id="chat-bubble">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
+    </div>
+    <div id="chat-window" class="">
+        <div id="chat-header">
+            <h3>Moose - Excelwise Assistant</h3>
+            <button id="close-chat-button">&times;</button>
+        </div>
+        <div id="chat-messages">
+        </div>
+        <div id="chat-options">
+        </div>
+    </div>
 
     <script>
         const menuButton = document.getElementById('mobile-menu-button');
@@ -639,6 +807,8 @@
             const cursorDot = document.getElementById('cursor-dot');
             const cursorCircle = document.getElementById('cursor-circle');
             const footer = document.getElementById('main-footer');
+            const ctaDarkSection = document.getElementById('cta-dark-section');
+
             if (!cursorDot || !cursorCircle) { return; }
 
             let targetX = -100, targetY = -100;
@@ -672,22 +842,27 @@
                  }
             });
 
-            const interactiveElements = document.querySelectorAll('a, button, input[type="submit"], .service-card, .location-card, .testimonial-card, .job-card, #job-search-input');
+            const interactiveElements = document.querySelectorAll('a, button, input[type="submit"], .service-card, .location-card, .testimonial-card, .job-card, #job-search-input, #chat-bubble, #close-chat-button, .chat-option-button');
             interactiveElements.forEach(el => {
                 el.addEventListener('mouseenter', () => { cursorDot.classList.add('cursor-hover'); cursorCircle.classList.add('cursor-hover'); });
                 el.addEventListener('mouseleave', () => { cursorDot.classList.remove('cursor-hover'); cursorCircle.classList.remove('cursor-hover'); });
             });
 
-             if (footer) {
-                 footer.addEventListener('mouseenter', () => {
-                     cursorDot.classList.add('on-dark');
-                     cursorCircle.classList.add('on-dark');
-                 });
-                 footer.addEventListener('mouseleave', () => {
-                      cursorDot.classList.remove('on-dark');
-                      cursorCircle.classList.remove('on-dark');
-                 });
-             }
+            const darkSections = [footer, ctaDarkSection].filter(el => el);
+
+            darkSections.forEach(section => {
+                if (section) {
+                    section.addEventListener('mouseenter', () => {
+                        cursorDot.classList.add('on-dark');
+                        cursorCircle.classList.add('on-dark');
+                    });
+                    section.addEventListener('mouseleave', () => {
+                        cursorDot.classList.remove('on-dark');
+                        cursorCircle.classList.remove('on-dark');
+                    });
+                }
+            });
+
 
             document.addEventListener('mouseleave', () => { cursorDot.style.opacity = '0'; cursorCircle.style.opacity = '0'; cursorVisible = false; });
             document.addEventListener('mouseenter', (e) => {
@@ -869,8 +1044,122 @@
             sections.forEach(section => sectionObserver.observe(section));
         });
 
+        // Chatbot Moose Logic
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatBubble = document.getElementById('chat-bubble');
+            const chatWindow = document.getElementById('chat-window');
+            const closeChatButton = document.getElementById('close-chat-button');
+            const chatMessages = document.getElementById('chat-messages');
+            const chatOptions = document.getElementById('chat-options');
+
+            if (!chatBubble || !chatWindow || !closeChatButton || !chatMessages || !chatOptions) {
+                console.error("Chatbot elements not found!");
+                return;
+            }
+
+            const conversation = {
+                start: {
+                    bot: "Hello! I'm Moose, your Excelwise Assistant. How can I help you today?",
+                    options: ["Our Services", "About Excelwise", "Find Jobs", "Contact Us"]
+                },
+                "Our Services": {
+                    bot: "We offer a range of management consulting services. Which area are you interested in?",
+                    options: ["Recruitment", "Payroll Processing", "HR Outsourcing", "Project Consulting", "Training & Development", "Back to Start"]
+                },
+                "Recruitment": {
+                    bot: "We specialize in Professional Recruitment and placement solutions to help you find the best talent. Would you like to know more or get in touch?",
+                    options: ["More Details (Services Page)", "Contact Us", "Other Services", "Back to Start"]
+                },
+                "Payroll Processing": {
+                    bot: "Our Payroll Processing services ensure accuracy and efficiency. Would you like to know more or get in touch?",
+                    options: ["More Details (Services Page)", "Contact Us", "Other Services", "Back to Start"]
+                },
+                "HR Outsourcing": {
+                    bot: "With HR Outsourcing, we provide comprehensive support so you can focus on your core business. Interested in details or contacting us?",
+                    options: ["More Details (Services Page)", "Contact Us", "Other Services", "Back to Start"]
+                },
+                "Project Consulting": {
+                    bot: "We offer strategic guidance and management for your key projects. Would you like to learn more?",
+                    options: ["More Details (Services Page)", "Contact Us", "Other Services", "Back to Start"]
+                },
+                 "Training & Development": {
+                    bot: "Our Training & Development programs enhance employee skills and performance. Would you like to learn more?",
+                    options: ["More Details (Services Page)", "Contact Us", "Other Services", "Back to Start"]
+                },
+                "About Excelwise": {
+                    bot: "Excelwise Consultants Limited is a Management Consulting company offering tailored services for organizations’ management needs. Our core values are Integrity, Professionalism, Client Focus, and Innovation. You can find more on our <a href='#about' class='text-purple-300 hover:underline'>About Us</a> page.",
+                    options: ["Our Services", "Find Jobs", "Contact Us", "Back to Start"]
+                },
+                "Find Jobs": {
+                    bot: "Looking for career opportunities? Head over to our <a href='#jobs' class='text-purple-300 hover:underline'>Find Jobs</a> section to see current openings!",
+                    options: ["Our Services", "About Excelwise", "Contact Us", "Back to Start"]
+                },
+                "Contact Us": {
+                    bot: "You can reach us via the form on our <a href='#contact-form' class='text-purple-300 hover:underline'>Contact page</a>, or email info@excelwiseconsultants.co.ke.",
+                    options: ["Our Services", "About Excelwise", "Find Jobs", "Back to Start"]
+                },
+                "More Details (Services Page)": {
+                    bot: "You can find more detailed information about all our offerings on the <a href='#services' class='text-purple-300 hover:underline'>Our Services</a> section of the website.",
+                    options: ["Recruitment", "Payroll Processing", "HR Outsourcing", "Project Consulting", "Training & Development", "Back to Start"]
+                },
+                "Other Services": {
+                    bot: "Which other service are you interested in?",
+                    options: ["Recruitment", "Payroll Processing", "HR Outsourcing", "Project Consulting", "Training & Development", "Back to Start"]
+                },
+                "Back to Start": {
+                    bot: "What else can I help you with?",
+                    options: ["Our Services", "About Excelwise", "Find Jobs", "Contact Us"]
+                }
+            };
+
+            function addChatMessage(text, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('chat-message', sender);
+                messageDiv.innerHTML = text;
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function displayOptions(options) {
+                chatOptions.innerHTML = '';
+                if (options) {
+                    options.forEach(optionText => {
+                        const button = document.createElement('button');
+                        button.textContent = optionText;
+                        button.classList.add('chat-option-button');
+                        button.addEventListener('click', () => handleOptionClick(optionText));
+                        chatOptions.appendChild(button);
+                    });
+                }
+            }
+
+            function handleOptionClick(optionText) {
+                addChatMessage(optionText, 'user');
+                const response = conversation[optionText] || conversation['start'];
+
+                chatOptions.innerHTML = '<p class="typing-indicator w-full text-center">Moose is typing...</p>';
+
+                setTimeout(() => {
+                    addChatMessage(response.bot, 'bot');
+                    displayOptions(response.options);
+                }, 700);
+            }
+
+            chatBubble.addEventListener('click', () => {
+                chatWindow.classList.toggle('active');
+                if (chatWindow.classList.contains('active') && chatMessages.children.length === 0) {
+                    const startState = conversation['start'];
+                    addChatMessage(startState.bot, 'bot');
+                    displayOptions(startState.options);
+                }
+            });
+
+            closeChatButton.addEventListener('click', () => {
+                chatWindow.classList.remove('active');
+            });
+        });
+
     </script>
 
 </body>
 </html>
-```
