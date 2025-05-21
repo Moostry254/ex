@@ -345,6 +345,24 @@
         .social-icon-link:hover {
             color: #c4b5fd;
         }
+        .service-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out, opacity 0.3s ease-out 0.1s, margin-top 0.5s ease-out;
+            opacity: 0;
+            margin-top: 0;
+        }
+        .service-details.expanded {
+            max-height: 500px; /* Adjust as needed for content */
+            opacity: 1;
+            margin-top: 1rem; /* Add space when expanded */
+        }
+        .service-learn-more svg {
+            transition: transform 0.3s ease-out;
+        }
+        .service-learn-more.expanded svg {
+            transform: rotate(180deg);
+        }
 
     </style>
 </head>
@@ -468,28 +486,52 @@
                              <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                         </div>
                         <h3 class="text-lg font-semibold text-gray-900 mb-2">Payroll Processing</h3>
-                        <p class="text-sm text-gray-600">Efficient and accurate management of your company payroll.</p>
+                        <p class="text-sm text-gray-600 mb-2">Efficient and accurate management of your company payroll.</p>
+                        <button class="service-learn-more mt-2 text-sm text-purple-600 hover:text-purple-800 font-medium flex items-center justify-center w-full">
+                            Learn More <svg class="w-4 h-4 ml-1 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="service-details hidden mt-4 text-sm text-gray-600 text-left">
+                            <p>Our payroll processing services streamline your operations, ensuring timely and accurate salary distribution, tax compliance, and reporting. We handle complexities so you can focus on your core business activities. [More detailed explanation of this service, its benefits, and our approach...]</p>
+                        </div>
                     </div>
                     <div class="service-card card-hover bg-white p-6 rounded-lg shadow-md text-center border border-gray-200">
                         <div class="mb-4 text-purple-600">
                              <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
                         </div>
                         <h3 class="text-lg font-semibold text-gray-900 mb-2">HR Outsourcing</h3>
-                        <p class="text-sm text-gray-600">Comprehensive HR support, allowing you to focus on your core business.</p>
+                        <p class="text-sm text-gray-600 mb-2">Comprehensive HR support, allowing you to focus on your core business.</p>
+                        <button class="service-learn-more mt-2 text-sm text-purple-600 hover:text-purple-800 font-medium flex items-center justify-center w-full">
+                            Learn More <svg class="w-4 h-4 ml-1 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="service-details hidden mt-4 text-sm text-gray-600 text-left">
+                            <p>Excelwise offers comprehensive HR outsourcing solutions, managing everything from talent acquisition and onboarding to performance management and compliance. Let us handle your HR functions, so you can concentrate on strategic growth. [More detailed explanation of this service, its benefits, and our approach...]</p>
+                        </div>
                     </div>
                     <div class="service-card card-hover bg-white p-6 rounded-lg shadow-md text-center border border-gray-200">
                         <div class="mb-4 text-purple-600">
                              <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17.25v-.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v.375m-3.75 0h.008v.015h-.008V17.25zm3.75 0h.008v.015h-.008V17.25zm-3.75 0h.008v.015h-.008V17.25zm3.75 0h.008v.015h-.008V17.25zm-3.75 0h.008v.015h-.008V17.25zm3.75 0h.008v.015h-.008V17.25zM9.75 19.125v-.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v.375m-3.75 0h.008v.015h-.008V19.125zm3.75 0h.008v.015h-.008V19.125zm-3.75 0h.008v.015h-.008V19.125zm3.75 0h.008v.015h-.008V19.125zm-3.75 0h.008v.015h-.008V19.125zm3.75 0h.008v.015h-.008V19.125zM9.75 21v-.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v.375m-3.75 0h.008v.015h-.008V21zm3.75 0h.008v.015h-.008V21zm-3.75 0h.008v.015h-.008V21zm3.75 0h.008v.015h-.008V21zm-3.75 0h.008v.015h-.008V21zm3.75 0h.008v.015h-.008V21zM9.75 3v1.5m0 0V3m0 1.5a3 3 0 100 6 3 3 0 000-6zm0 0V3m6 1.5V3m0 1.5a3 3 0 100 6 3 3 0 000-6zm0 0V3" /></svg>
                         </div>
                         <h3 class="text-lg font-semibold text-gray-900 mb-2">Project Consulting</h3>
-                        <p class="text-sm text-gray-600">Strategic guidance and management for your key projects.</p>
+                        <p class="text-sm text-gray-600 mb-2">Strategic guidance and management for your key projects.</p>
+                        <button class="service-learn-more mt-2 text-sm text-purple-600 hover:text-purple-800 font-medium flex items-center justify-center w-full">
+                            Learn More <svg class="w-4 h-4 ml-1 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="service-details hidden mt-4 text-sm text-gray-600 text-left">
+                            <p>Our project consulting services provide expert oversight and strategic direction to ensure your projects are delivered on time, within budget, and to the highest standards. We help you navigate complexities and achieve your project goals. [More detailed explanation of this service, its benefits, and our approach...]</p>
+                        </div>
                     </div>
                     <div class="service-card card-hover bg-white p-6 rounded-lg shadow-md text-center border border-gray-200">
                         <div class="mb-4 text-purple-600">
                              <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" /></svg>
                         </div>
                         <h3 class="text-lg font-semibold text-gray-900 mb-2">Recruitment</h3>
-                        <p class="text-sm text-gray-600">Finding and attracting the best talent for your organization.</p>
+                        <p class="text-sm text-gray-600 mb-2">Finding and attracting the best talent for your organization.</p>
+                        <button class="service-learn-more mt-2 text-sm text-purple-600 hover:text-purple-800 font-medium flex items-center justify-center w-full">
+                            Learn More <svg class="w-4 h-4 ml-1 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="service-details hidden mt-4 text-sm text-gray-600 text-left">
+                            <p>Excelwise excels at identifying and attracting top-tier talent that aligns with your company culture and objectives. Our recruitment process is thorough, ensuring you get the right fit for every role. [More detailed explanation of this service, its benefits, and our approach...]</p>
+                        </div>
                     </div>
                 </div>
                 <div class="text-center mt-12">
@@ -1163,3 +1205,6 @@
 
 </body>
 </html>
+```
+
+The chatbot and social media links should now be correctly placed in the code you provided. Please check the previ
